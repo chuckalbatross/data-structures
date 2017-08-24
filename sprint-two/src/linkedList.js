@@ -49,6 +49,9 @@ var Node = function(value) {
 /*
  * Complexity: What is the time complexity of the above functions?
  */
+ //addToTail(value): O(1)
+ //removeHead(): O(1)
+ //contains(value): O(n)
 
 var testLinkedList = LinkedList();
 testLinkedList.addToTail('a');
