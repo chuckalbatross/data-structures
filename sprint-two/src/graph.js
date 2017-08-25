@@ -15,9 +15,9 @@ Graph.prototype.addNode = function(node) {
 // Return a boolean value indicating if the value passed to contains is represented in the graph.
 Graph.prototype.contains = function(node) {
   for (var key in this.Node) {
-  	if (this.Node[key][0].value === node) {
-  		return true;
-  	}
+    if (this.Node[key][0].value === node) {
+      return true;
+    }
   }
   return false;
 };
@@ -26,16 +26,14 @@ Graph.prototype.contains = function(node) {
 Graph.prototype.removeNode = function(node) {
   //Remove edges whose toNode values === node
   if (this.Node[node].length > 1) {
-  var deleteEdgesArr = this.Node[node][1].edges;
+    var deleteEdgesArr = this.Node[node][1].edges;
     for (var i = 0; i < deleteEdgesArr.length; i++) {
-  	  //this.Node[deleteEdgesArr[i]][1].edges.splice(this.Node[deleteEdgesArr[i]][1].edges.indexOf(node), 1);
-  	  this.removeEdge(deleteEdgesArr[i], node);
+      //this.Node[deleteEdgesArr[i]][1].edges.splice(this.Node[deleteEdgesArr[i]][1].edges.indexOf(node), 1);
+      this.removeEdge(deleteEdgesArr[i], node);
     }
   }
   //delete target node
   delete this.Node[node]; 
-
-
 };
 
 // Returns a boolean indicating whether two specified nodes are connected.  Pass in the values contained in each of the two nodes.
@@ -52,18 +50,18 @@ Graph.prototype.hasEdge = function(fromNode, toNode) {
 // Connects two nodes in a graph by adding an edge between them.
 Graph.prototype.addEdge = function(fromNode, toNode) {
   if (this.contains(fromNode) && this.contains(toNode)) {
-  	//if edges:[] doesn't exist
-  	if (this.Node[fromNode].length === 1) {
-  	  this.Node[fromNode].push({edges: [toNode]});
-  	} else {
-  	  this.Node[fromNode][1].edges.push(toNode);
-  	}
-  	if (this.Node[toNode].length === 1) {
-  	  this.Node[toNode].push({edges: [fromNode]});
-  	} else {
-  	  this.Node[toNode][1].edges.push(fromNode);
-  	}
-  	//else (edges:[]) does exist, push to edges[]
+    //if edges:[] doesn't exist
+    if (this.Node[fromNode].length === 1) {
+      this.Node[fromNode].push({edges: [toNode]});
+    } else {
+      this.Node[fromNode][1].edges.push(toNode);
+    }
+    if (this.Node[toNode].length === 1) {
+      this.Node[toNode].push({edges: [fromNode]});
+    } else {
+      this.Node[toNode][1].edges.push(fromNode);
+    }
+    //else (edges:[]) does exist, push to edges[]
   }
 };
 
@@ -76,12 +74,21 @@ Graph.prototype.removeEdge = function(fromNode, toNode) {
 // Pass in a callback which will be executed on each node of the graph.
 Graph.prototype.forEachNode = function(cb) {
   for (var key in this.Node) {
-  	cb(this.Node[key][0].value);
+    cb(this.Node[key][0].value);
   }
 };
 
 /*
  * Complexity: What is the time complexity of the above functions?
+
+
+ addNode(): O(1)
+ contains(): O(n)
+ removeNode(): O(1)
+ hasEdge(): O(1) //linear to number of edges a single node has (constant relative to number of nodes in entire graph)
+ addEdge(): O(1)
+ removeEdge(): O(1)
+ forEachNode(): O(n)
  */
 
 
@@ -93,17 +100,17 @@ Graph.prototype.forEachNode = function(cb) {
  console.log(arr.node2);
  */
 
- var testGraph = new Graph();
- testGraph.addNode(2);
- testGraph.addNode(3);
- testGraph.addNode(4);
- testGraph.addNode(5);
- // console.log('Contains 2?', testGraph.contains(2));
- // testGraph.removeNode(2);
- // console.log('Contains 2?', testGraph.contains(2));
- testGraph.addEdge(2, 3);
- testGraph.addEdge(2, 5);
- testGraph.addEdge(5, 4);
- testGraph.addEdge(4, 3);
- testGraph.removeEdge(2, 3);
+var testGraph = new Graph();
+testGraph.addNode(2);
+testGraph.addNode(3);
+testGraph.addNode(4);
+testGraph.addNode(5);
+// console.log('Contains 2?', testGraph.contains(2));
+// testGraph.removeNode(2);
+// console.log('Contains 2?', testGraph.contains(2));
+testGraph.addEdge(2, 3);
+testGraph.addEdge(2, 5);
+testGraph.addEdge(5, 4);
+testGraph.addEdge(4, 3);
+testGraph.removeEdge(2, 3);
 
