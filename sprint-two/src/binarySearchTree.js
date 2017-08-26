@@ -37,7 +37,7 @@ var binarySearchTreeMethods = {
       if (node.right) {
         containsRecursive(node.right);
       }
-    }
+    };
 
     containsRecursive(this);
     return result;
