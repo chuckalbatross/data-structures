@@ -40,7 +40,7 @@ Graph.prototype.removeNode = function(node) {
 Graph.prototype.hasEdge = function(fromNode, toNode) {
   //if either fromNode or toNode doesn't have an edges object (array.length === 1), then return false
   if (this.contains(fromNode) && this.contains(toNode)) {  
-    if (this.Node[fromNode].length > 1 && this.Node[toNode].length) {
+    if (this.Node[fromNode].length > 1 && this.Node[toNode].length > 1) {
       return this.Node[fromNode][1].edges.includes(toNode);
     }
   }
