@@ -77,28 +77,41 @@ var HashTable = function() {
   this._storage = LimitedArray(this._limit);
 };
 
-HashTable.prototype.insert = function(k, v) {
+HashTable.prototype.findTuple = function(k, v, cbFound, cbNotFound) {
   var index = getIndexBelowMaxForKey(k, this._limit);
-  if (!Array.isArray(this._storage[index])) {
-    this._storage[index] = []; //Linked List
-  }
-  if (this.retrieve(k) === undefined) {
-    this._storage[index].push([k, v]);
-  } else {
-    for (var i = 0; i < this._storage[index].length; i++) {
-      if (this._storage[index][i][0] === k) {
-        this._storage[index][i][1] = v;
-      }
+  var bucket = this._storage.get(index) || [];
+
+  this._storage[index] = bucket;
+
+  for (var i = 0; i < bucket.length; i++) {
+    var tuple = bucket[i];
+    if (tuple[0] === k) {
+      return cbFound.call(this, bucket, tuple);
     }
   }
+  return cbNotFound.call(this, bucket, tuple);
+}
+
+HashTable.prototype.insert = function(k, v) {
+  this.findTuple(k, v, 
+    function(bucket, tuple) {
+      var oldVal = tuple[1];
+      tuple[1] = v;
+      return oldVal;
+    }, 
+    function(bucket, tuple) {
+      bucket.push([k, v]);
+    });
 };
 
 HashTable.prototype.retrieve = function(k) {
   var index = getIndexBelowMaxForKey(k, this._limit);
-  //return this._storage[index];
-  for (var i = 0; i < this._storage[index].length; i++) {
-    if (this._storage[index][i][0] === k) {
-      return this._storage[index][i][1];
+  ////return this._storage[index];
+  var bucket = this._storage[index];
+  for (var i = 0; i < bucket.length; i++) {
+    var tuple = bucket[i];
+    if (tuple[0] === k) {
+      return tuple[1];  //if found action
     }
   }
   return undefined;
@@ -106,12 +119,20 @@ HashTable.prototype.retrieve = function(k) {
 
 HashTable.prototype.remove = function(k) {
   var index = getIndexBelowMaxForKey(k, this._limit);
-  //this._storage[index] = undefined;
-  for (var i = 0; i < this._storage[index].length; i++) {
-    if (this._storage[index][i][0] === k) {
-      this._storage[index][i].splice(i, 1);
+  ////this._storage[index] = undefined;
+  // for (var i = 0; i < this._storage[index].length; i++) {
+  //   if (this._storage[index][i][0] === k) {
+  //     this._storage[index][i].splice(i, 1);
+  //   }
+  // }
+  var bucket = this._storage[index];
+  for (var i = 0; i < bucket.length; i++) {
+    var tuple = bucket[i];
+    if (tuple[0] === k) {
+      bucket.splice(i, 1);  //if found action
     }
   }
+  return undefined;
 };
 
 
@@ -120,15 +141,13 @@ HashTable.prototype.remove = function(k) {
  * Complexity: What is the time complexity of the above functions?
  */
 
-// var testHash = new HashTable();
-// var oldHashFunction = getIndexBelowMaxForKey;
-// getIndexBelowMaxForKey = function() { return 0; };
-// var indexTest = getIndexBelowMaxForKey();
-// //console.log(indexTest);
+var testHash = new HashTable();
+var oldHashFunction = getIndexBelowMaxForKey;
+//console.log(indexTest);
 
-// testHash.insert('Steven', 'Segall');
-// testHash.insert('Helen', 'Yii');
-// console.log('Should be Segall:', testHash.retrieve('Steven'));
-// console.log('Should be Yii:', testHash.retrieve('Helen'));
+testHash.insert('Steven', 'Segall');
+testHash.insert('Helen', 'Yii');
+console.log('Should be Segall:', testHash.retrieve('Steven'));
+console.log('Should be Yii:', testHash.retrieve('Helen'));
 
 
